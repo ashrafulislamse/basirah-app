@@ -30,6 +30,13 @@ These steering files guide Kiro (AI assistant) in building the Basirah app with 
 - Testing strategy per layer
 - Common mistakes to avoid
 
+**07-version-management.md**
+- Semantic versioning strategy
+- Git tagging workflow
+- Version update procedures
+- Release stage definitions
+- Version history tracking
+
 ### 🎨 Context-Specific (High Priority)
 
 **03-ui-design-system.md** (Included when working on UI files)
