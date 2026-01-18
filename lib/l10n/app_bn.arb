@@ -1,0 +1,178 @@
+{
+  "@@locale": "bn",
+  
+  "appName": "বাসিরাহ",
+  "@appName": {
+    "description": "অ্যাপ্লিকেশনের নাম"
+  },
+
+  "greeting": "আসসালামু আলাইকুম",
+  "@greeting": {
+    "description": "ইসলামিক শুভেচ্ছা"
+  },
+
+  "welcome": "বাসিরাহতে স্বাগতম - আপনার ইসলামিক সঙ্গী",
+  "@welcome": {
+    "description": "হোম স্ক্রিনে স্বাগত বার্তা"
+  },
+
+  "prayerTimes": "নামাজের সময়",
+  "@prayerTimes": {
+    "description": "নামাজের সময় ফিচার"
+  },
+
+  "qibla": "কিবলা",
+  "@qibla": {
+    "description": "কিবলা কম্পাস ফিচার"
+  },
+
+  "quran": "কুরআন",
+  "@quran": {
+    "description": "কুরআন রিডার ফিচার"
+  },
+
+  "duas": "দোয়া",
+  "@duas": {
+    "description": "দোয়া সংগ্রহ ফিচার"
+  },
+
+  "tasbeeh": "তাসবিহ",
+  "@tasbeeh": {
+    "description": "তাসবিহ কাউন্টার ফিচার"
+  },
+
+  "prayerTracker": "নামাজ ট্র্যাকার",
+  "@prayerTracker": {
+    "description": "নামাজ ট্র্যাকিং ফিচার"
+  },
+
+  "settings": "সেটিংস",
+  "@settings": {
+    "description": "সেটিংস স্ক্রিন"
+  },
+
+  "appearance": "চেহারা",
+  "@appearance": {
+    "description": "চেহারা সেটিংস বিভাগ"
+  },
+
+  "themeMode": "থিম মোড",
+  "@themeMode": {
+    "description": "থিম মোড সেটিং"
+  },
+
+  "themeModeSubtitle": "হালকা, গাঢ়, সিস্টেম, বা নামাজ-সচেতন",
+  "@themeModeSubtitle": {
+    "description": "থিম মোড সাবটাইটেল"
+  },
+
+  "language": "ভাষা",
+  "@language": {
+    "description": "ভাষা সেটিং"
+  },
+
+  "languageSubtitle": "English, বাংলা",
+  "@languageSubtitle": {
+    "description": "ভাষা সাবটাইটেল"
+  },
+
+  "prayerSettings": "নামাজ সেটিংস",
+  "@prayerSettings": {
+    "description": "নামাজ সেটিংস বিভাগ"
+  },
+
+  "calculationMethod": "গণনা পদ্ধতি",
+  "@calculationMethod": {
+    "description": "নামাজের গণনা পদ্ধতি"
+  },
+
+  "calculationMethodSubtitle": "ইসলামিক ফাউন্ডেশন বাংলাদেশ",
+  "@calculationMethodSubtitle": {
+    "description": "ডিফল্ট গণনা পদ্ধতি"
+  },
+
+  "prayerNotifications": "নামাজের বিজ্ঞপ্তি",
+  "@prayerNotifications": {
+    "description": "নামাজের বিজ্ঞপ্তি সেটিং"
+  },
+
+  "prayerNotificationsSubtitle": "নামাজের সময় সতর্কতা পরিচালনা করুন",
+  "@prayerNotificationsSubtitle": {
+    "description": "নামাজের বিজ্ঞপ্তি সাবটাইটেল"
+  },
+
+  "location": "অবস্থান",
+  "@location": {
+    "description": "অবস্থান সেটিং"
+  },
+
+  "locationSubtitle": "সঠিক নামাজের সময়ের জন্য আপনার অবস্থান সেট করুন",
+  "@locationSubtitle": {
+    "description": "অবস্থান সাবটাইটেল"
+  },
+
+  "about": "সম্পর্কে",
+  "@about": {
+    "description": "সম্পর্কে বিভাগ"
+  },
+
+  "aboutBasirah": "বাসিরাহ সম্পর্কে",
+  "@aboutBasirah": {
+    "description": "বাসিরাহ সম্পর্কে"
+  },
+
+  "version": "সংস্করণ ১.০.০",
+  "@version": {
+    "description": "অ্যাপ সংস্করণ"
+  },
+
+  "privacyPolicy": "গোপনীয়তা নীতি",
+  "@privacyPolicy": {
+    "description": "গোপনীয়তা নীতি"
+  },
+
+  "privacyPolicySubtitle": "আমরা কীভাবে আপনার ডেটা সুরক্ষিত করি",
+  "@privacyPolicySubtitle": {
+    "description": "গোপনীয়তা নীতি সাবটাইটেল"
+  },
+
+  "openSource": "ওপেন সোর্স",
+  "@openSource": {
+    "description": "ওপেন সোর্স"
+  },
+
+  "openSourceSubtitle": "GitHub-এ দেখুন",
+  "@openSourceSubtitle": {
+    "description": "ওপেন সোর্স সাবটাইটেল"
+  },
+
+  "comingSoon": "শীঘ্রই আসছে!",
+  "@comingSoon": {
+    "description": "শীঘ্রই আসছে বার্তা"
+  },
+
+  "fajr": "ফজর",
+  "@fajr": {
+    "description": "ফজরের নামাজ"
+  },
+
+  "zuhr": "যোহর",
+  "@zuhr": {
+    "description": "যোহরের নামাজ"
+  },
+
+  "asr": "আসর",
+  "@asr": {
+    "description": "আসরের নামাজ"
+  },
+
+  "maghrib": "মাগরিব",
+  "@maghrib": {
+    "description": "মাগরিবের নামাজ"
+  },
+
+  "isha": "এশা",
+  "@isha": {
+    "description": "এশার নামাজ"
+  }
+}

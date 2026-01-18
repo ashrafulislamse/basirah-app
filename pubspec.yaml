@@ -1,0 +1,163 @@
+name: basirah
+description: "Islamic Companion App - Your Daily Spiritual Guide"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Routing
+  go_router: ^14.2.7
+
+  # Prayer Times Calculation
+  adhan: ^2.0.0
+
+  # Location Services
+  geolocator: ^13.0.2
+  geocoding: ^3.0.0
+
+  # Sensors (Qibla Compass)
+  flutter_compass: ^0.8.0
+  sensors_plus: ^6.0.1
+
+  # Notifications
+  flutter_local_notifications: ^18.0.1
+
+  # Date & Time
+  intl: any
+  hijri: ^3.0.0
+
+  # UI Components
+  cupertino_icons: ^1.0.8
+  flutter_svg: ^2.0.10+1
+
+  # Utilities
+  shared_preferences: ^2.3.2
+  path_provider: ^2.1.4
+  equatable: ^2.0.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Linting
+  flutter_lints: ^5.0.0
+
+  # Code Generation
+  build_runner: ^2.4.13
+  riverpod_generator: ^2.4.3
+  
+  # App Icon Generator
+  flutter_launcher_icons: ^0.14.3
+  
+  # Native Splash Screen
+  flutter_native_splash: ^2.4.5
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  # Assets
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+
+  # Fonts - TODO: Add font files
+  # fonts:
+  #   # English Fonts
+  #   - family: Manrope
+  #     fonts:
+  #       - asset: assets/fonts/Manrope-Regular.ttf
+  #       - asset: assets/fonts/Manrope-Bold.ttf
+  #         weight: 700
+  #       - asset: assets/fonts/Manrope-SemiBold.ttf
+  #         weight: 600
+
+  #   - family: Inter
+  #     fonts:
+  #       - asset: assets/fonts/Inter-Regular.ttf
+  #       - asset: assets/fonts/Inter-Bold.ttf
+  #         weight: 700
+  #       - asset: assets/fonts/Inter-SemiBold.ttf
+  #         weight: 600
+
+  #   # Bangla Fonts
+  #   - family: NotoSerifBengali
+  #     fonts:
+  #       - asset: assets/fonts/NotoSerifBengali-Regular.ttf
+  #       - asset: assets/fonts/NotoSerifBengali-Bold.ttf
+  #         weight: 700
+
+  #   - family: HindSiliguri
+  #     fonts:
+  #       - asset: assets/fonts/HindSiliguri-Regular.ttf
+  #       - asset: assets/fonts/HindSiliguri-Bold.ttf
+  #         weight: 700
+
+  #   # Arabic Fonts
+  #   - family: Amiri
+  #     fonts:
+  #       - asset: assets/fonts/Amiri-Regular.ttf
+  #       - asset: assets/fonts/Amiri-Bold.ttf
+  #         weight: 700
+
+  #   - family: ScheherazadeNew
+  #     fonts:
+  #       - asset: assets/fonts/ScheherazadeNew-Regular.ttf
+  #       - asset: assets/fonts/ScheherazadeNew-Bold.ttf
+  #         weight: 700
+
+# App Icon Configuration
+# Run: dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_icon_combined.png"
+  adaptive_icon_foreground: "assets/icons/basirah-icon.png"
+  adaptive_icon_background: "assets/icons/appiconbg.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/icons/app_icon_combined.png"
+    background_color: "#0D4D4D"
+    theme_color: "#0D4D4D"
+
+# Native Splash Screen Configuration
+# Run: dart run flutter_native_splash:create
+# Simple: Dark background + logo only (Android 12+ doesn't support background images well)
+# Flutter splash will animate in the pattern from this state
+flutter_native_splash:
+  # Dark background (same as Flutter splash starting color)
+  color: "#0F2027"
+  
+  # Logo centered on dark background
+  image: "assets/icons/basirah-icon.png"
+  
+  # Android 12+ settings
+  android_12:
+    color: "#0F2027"
+    image: "assets/icons/basirah-icon.png"
+    icon_background_color: "#0F2027"
+  
+  # iOS settings
+  ios: true
+  
+  # Web settings
+  web: false
+  
+  # Full screen mode
+  fullscreen: true
+

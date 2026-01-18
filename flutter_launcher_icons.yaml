@@ -1,0 +1,29 @@
+# Flutter Launcher Icons Configuration
+# Run: dart run flutter_launcher_icons
+# Documentation: https://pub.dev/packages/flutter_launcher_icons
+
+flutter_launcher_icons:
+  # Android configuration
+  android: true
+  ios: true
+  
+  # Main combined icon (logo on background) for iOS & legacy Android
+  image_path: "assets/icons/app_icon_combined.png"
+  
+  # Android Adaptive Icon settings (Android 8.0+)
+  # These allow the icon to adapt to different shapes (circle, squircle, etc.)
+  adaptive_icon_foreground: "assets/icons/basirah-icon.png"
+  adaptive_icon_background: "assets/icons/appiconbg.png"
+  
+  # Minimum SDK for adaptive icons
+  min_sdk_android: 21
+  
+  # iOS specific settings  
+  remove_alpha_ios: true
+  
+  # Web configuration
+  web:
+    generate: true
+    image_path: "assets/icons/app_icon_combined.png"
+    background_color: "#0D4D4D"
+    theme_color: "#0D4D4D"

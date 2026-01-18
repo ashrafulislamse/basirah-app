@@ -1,0 +1,178 @@
+{
+  "@@locale": "en",
+  
+  "appName": "Basirah",
+  "@appName": {
+    "description": "The application name"
+  },
+
+  "greeting": "As-salamu alaykum",
+  "@greeting": {
+    "description": "Islamic greeting"
+  },
+
+  "welcome": "Welcome to Basirah - Your Islamic Companion",
+  "@welcome": {
+    "description": "Welcome message on home screen"
+  },
+
+  "prayerTimes": "Prayer Times",
+  "@prayerTimes": {
+    "description": "Prayer times feature"
+  },
+
+  "qibla": "Qibla",
+  "@qibla": {
+    "description": "Qibla compass feature"
+  },
+
+  "quran": "Quran",
+  "@quran": {
+    "description": "Quran reader feature"
+  },
+
+  "duas": "Duas",
+  "@duas": {
+    "description": "Dua collection feature"
+  },
+
+  "tasbeeh": "Tasbeeh",
+  "@tasbeeh": {
+    "description": "Tasbeeh counter feature"
+  },
+
+  "prayerTracker": "Prayer Tracker",
+  "@prayerTracker": {
+    "description": "Prayer tracking feature"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings screen"
+  },
+
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Appearance settings section"
+  },
+
+  "themeMode": "Theme Mode",
+  "@themeMode": {
+    "description": "Theme mode setting"
+  },
+
+  "themeModeSubtitle": "Light, Dark, System, or Prayer-Aware",
+  "@themeModeSubtitle": {
+    "description": "Theme mode subtitle"
+  },
+
+  "language": "Language",
+  "@language": {
+    "description": "Language setting"
+  },
+
+  "languageSubtitle": "English, বাংলা",
+  "@languageSubtitle": {
+    "description": "Language subtitle"
+  },
+
+  "prayerSettings": "Prayer Settings",
+  "@prayerSettings": {
+    "description": "Prayer settings section"
+  },
+
+  "calculationMethod": "Calculation Method",
+  "@calculationMethod": {
+    "description": "Prayer calculation method"
+  },
+
+  "calculationMethodSubtitle": "Islamic Foundation Bangladesh",
+  "@calculationMethodSubtitle": {
+    "description": "Default calculation method"
+  },
+
+  "prayerNotifications": "Prayer Notifications",
+  "@prayerNotifications": {
+    "description": "Prayer notifications setting"
+  },
+
+  "prayerNotificationsSubtitle": "Manage prayer time alerts",
+  "@prayerNotificationsSubtitle": {
+    "description": "Prayer notifications subtitle"
+  },
+
+  "location": "Location",
+  "@location": {
+    "description": "Location setting"
+  },
+
+  "locationSubtitle": "Set your location for accurate prayer times",
+  "@locationSubtitle": {
+    "description": "Location subtitle"
+  },
+
+  "about": "About",
+  "@about": {
+    "description": "About section"
+  },
+
+  "aboutBasirah": "About Basirah",
+  "@aboutBasirah": {
+    "description": "About Basirah"
+  },
+
+  "version": "Version 1.0.0",
+  "@version": {
+    "description": "App version"
+  },
+
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy policy"
+  },
+
+  "privacyPolicySubtitle": "How we protect your data",
+  "@privacyPolicySubtitle": {
+    "description": "Privacy policy subtitle"
+  },
+
+  "openSource": "Open Source",
+  "@openSource": {
+    "description": "Open source"
+  },
+
+  "openSourceSubtitle": "View on GitHub",
+  "@openSourceSubtitle": {
+    "description": "Open source subtitle"
+  },
+
+  "comingSoon": "Coming soon!",
+  "@comingSoon": {
+    "description": "Coming soon message"
+  },
+
+  "fajr": "Fajr",
+  "@fajr": {
+    "description": "Fajr prayer"
+  },
+
+  "zuhr": "Zuhr",
+  "@zuhr": {
+    "description": "Zuhr prayer"
+  },
+
+  "asr": "Asr",
+  "@asr": {
+    "description": "Asr prayer"
+  },
+
+  "maghrib": "Maghrib",
+  "@maghrib": {
+    "description": "Maghrib prayer"
+  },
+
+  "isha": "Isha",
+  "@isha": {
+    "description": "Isha prayer"
+  }
+}
