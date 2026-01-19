@@ -10,7 +10,7 @@ class AppColors {
   static const Color primaryTeal = Color(0xFF00897B);
 
   // Light Theme Colors
-  static const Color lightBackground = Color(0xFFFAFAFA);
+  static const Color lightBackground = Color(0xFFF3F4F6); // Slightly darker for card contrast
   static const Color lightSurface = Color(0xFFFFFFFF);
   static const Color lightOnBackground = Color(0xFF1A1A1A);
   static const Color lightOnSurface = Color(0xFF1A1A1A);

@@ -2,7 +2,7 @@ name: basirah
 description: "Islamic Companion App - Your Daily Spiritual Guide"
 publish_to: 'none'
 
-version: 0.1.0-dev+2
+version: 0.1.0-dev+3
 
 environment:
   sdk: ^3.9.2

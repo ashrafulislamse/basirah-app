@@ -10,6 +10,8 @@ import '../widgets/current_prayer_hero.dart';
 import '../widgets/prayer_list_widget.dart';
 import '../widgets/weekly_streak_widget.dart';
 import '../widgets/quick_settings_widget.dart';
+import '../widgets/prayer_insights_widget.dart';
+import '../widgets/quick_actions_row.dart';
 
 /// Prayer Times Screen - Premium UI/UX with Clean Architecture
 /// 
@@ -110,14 +112,15 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    const heroTopColor = Color(0xFF0F2027);
     final contentBgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final textColor = isDark ? Colors.white : const Color(0xFF1F2937);
+    final subTextColor = isDark ? Colors.white60 : const Color(0xFF6B7280);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: heroTopColor,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor: contentBgColor,
       ),
       child: Scaffold(
         backgroundColor: contentBgColor,
@@ -127,6 +130,131 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
               controller: _scrollController,
               physics: const BouncingScrollPhysics(),
               slivers: [
+                // Collapsing SliverAppBar
+                SliverAppBar(
+                  expandedHeight: 110,
+                  collapsedHeight: 60,
+                  toolbarHeight: 60,
+                  pinned: true,
+                  floating: false,
+                  elevation: 0,
+                  scrolledUnderElevation: 2,
+                  backgroundColor: contentBgColor.withOpacity(0.94),
+                  surfaceTintColor: Colors.transparent,
+                  automaticallyImplyLeading: false,
+                  flexibleSpace: LayoutBuilder(
+                    builder: (context, constraints) {
+                      // Calculate collapse progress (0 = expanded, 1 = collapsed)
+                      final expandedHeight = 110.0;
+                      final collapsedHeight = 60.0;
+                      final currentHeight = constraints.maxHeight;
+                      final topPadding = MediaQuery.of(context).padding.top;
+                      final effectiveHeight = currentHeight - topPadding;
+                      final progress = ((expandedHeight - effectiveHeight) / 
+                                       (expandedHeight - collapsedHeight))
+                                       .clamp(0.0, 1.0);
+                      
+                      // Subtitle opacity (fades out as collapsed)
+                      final subtitleOpacity = (1 - progress * 2).clamp(0.0, 1.0);
+                      
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: progress > 0.5 
+                              ? contentBgColor 
+                              : contentBgColor.withOpacity(0.94),
+                        ),
+                        child: SafeArea(
+                          bottom: false,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // Left side - Title + location/date
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Main title
+                                      Text(
+                                        'Prayer Times',
+                                        style: TextStyle(
+                                          fontSize: 24 - (progress * 4), // 24 -> 20
+                                          fontWeight: FontWeight.bold,
+                                          color: textColor,
+                                        ),
+                                      ),
+                                      // Location + Hijri date (fades out)
+                                      if (subtitleOpacity > 0) ...[
+                                        const SizedBox(height: 4),
+                                        Opacity(
+                                          opacity: subtitleOpacity,
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.location_on,
+                                                size: 14,
+                                                color: AppColors.primaryGreen,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                'Dhaka, BD',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: subTextColor,
+                                                ),
+                                              ),
+                                              Text(
+                                                ' • ',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: subTextColor,
+                                                ),
+                                              ),
+                                              Text(
+                                                '17 Rajab 1447',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: subTextColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                                
+                                // Settings icon
+                                GestureDetector(
+                                  onTap: () {
+                                    HapticFeedback.lightImpact();
+                                    // TODO: Navigate to settings
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: isDark ? Colors.white.withOpacity(0.1) : const Color(0xFFE5E7EB),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.settings_rounded,
+                                      color: isDark ? Colors.white70 : const Color(0xFF374151),
+                                      size: 22,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                
                 // Hero Section with Current Prayer
                 _buildHeroSection(context),
                 
@@ -145,7 +273,6 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
                             prayers: _getPrayerData(),
                             currentPrayerIndex: _currentPrayerIndex,
                             prayedStatus: _prayedStatus,
-                            onTimeStatus: _onTimeStatus,
                             onMarkAsPrayed: _markAsPrayed,
                             isJummah: _isFriday(),
                           ),
@@ -158,6 +285,20 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
                             onViewCalendar: () {
                               HapticFeedback.lightImpact();
                               // TODO: Navigate to calendar view
+                            },
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          
+                          // Prayer Insights (Gamification)
+                          PrayerInsightsWidget(
+                            monthlyPrayed: 142,
+                            monthlyTotal: 150,
+                            bestStreak: 18,
+                            fajrOnTime: 23,
+                            fajrTotal: 30,
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              // TODO: Open full statistics
                             },
                           ),
                           const SizedBox(height: AppSpacing.lg),
@@ -176,15 +317,15 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
                               HapticFeedback.lightImpact();
                               // TODO: Open location settings
                             },
-                            onAdjustmentsTap: () {
+                            onTimeAdjustmentsTap: () {
                               HapticFeedback.lightImpact();
                               // TODO: Open time adjustments
                             },
+                            onViewStatistics: () {
+                              HapticFeedback.lightImpact();
+                              // TODO: Navigate to statistics screen
+                            },
                           ),
-                          const SizedBox(height: AppSpacing.lg),
-                          
-                          // Statistics Button
-                          _buildStatsButton(context),
                           
                           // Bottom padding for nav bar
                           SizedBox(height: 100 + MediaQuery.of(context).padding.bottom),
@@ -195,9 +336,6 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
                 ),
               ],
             ),
-            
-            // Floating App Bar
-            _buildFloatingAppBar(context),
             
             // Confetti Animation
             Align(
@@ -226,8 +364,7 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
     );
   }
 
-  /// Hero section - DISTINCT from Home Screen
-  /// Uses flat header bar + floating card (NOT curved background like Home)
+  /// Hero section - Card stands out, Quick Actions below
   Widget _buildHeroSection(BuildContext context) {
     final prayers = _getPrayerData();
     final currentPrayer = prayers[_currentPrayerIndex];
@@ -235,232 +372,43 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen> {
     final contentBgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
     
     return SliverToBoxAdapter(
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // Top gradient for overscroll
-          Positioned(
-            top: -500,
-            left: 0,
-            right: 0,
-            height: 500,
-            child: Container(color: const Color(0xFF0F2027)),
+      child: Container(
+        color: contentBgColor,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 16,
+            left: AppSpacing.lg,
+            right: AppSpacing.lg,
+            bottom: 0,
           ),
-          
-          // Main content
-          Column(
+          child: Column(
             children: [
-              // FLAT header background (NOT curved like Home!)
-              Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF0F2027),
-                      Color(0xFF162d3a),
-                    ],
-                  ),
-                  // NO border radius - FLAT bottom edge (different from home!)
-                ),
-                child: SafeArea(
-                  bottom: false,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: 60, // Space for app bar
-                      left: AppSpacing.lg,
-                      right: AppSpacing.lg,
-                      bottom: 30,
-                    ),
-                    child: CurrentPrayerHero(
-                      prayerName: currentPrayer['name'] as String,
-                      arabicName: currentPrayer['arabic'] as String,
-                      time: currentPrayer['time'] as String,
-                      calculationMethod: 'Karachi',
-                      color: currentPrayer['color'] as Color,
-                      isPrayed: _prayedStatus[currentPrayer['key']] ?? false,
-                      onMarkAsPrayed: () => _markAsPrayed(currentPrayer['key'] as String),
-                      isJummah: _isFriday() && currentPrayer['key'] == 'dhuhr',
-                    ),
-                  ),
-                ),
+              // Current Prayer Hero Card
+              CurrentPrayerHero(
+                prayerName: currentPrayer['name'] as String,
+                arabicName: currentPrayer['arabic'] as String,
+                time: currentPrayer['time'] as String,
+                calculationMethod: 'Karachi',
+                color: currentPrayer['color'] as Color,
+                isPrayed: _prayedStatus[currentPrayer['key']] ?? false,
+                onMarkAsPrayed: () => _markAsPrayed(currentPrayer['key'] as String),
+                isJummah: _isFriday() && currentPrayer['key'] == 'dhuhr',
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Quick Actions Row (Qibla & Mosques only)
+              QuickActionsRow(
+                onQiblaTap: () {
+                  HapticFeedback.lightImpact();
+                  // TODO: Navigate to Qibla compass
+                },
+                onMosquesTap: () {
+                  HapticFeedback.lightImpact();
+                  // TODO: Navigate to nearby mosques
+                },
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Statistics button
-  Widget _buildStatsButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        // TODO: Navigate to statistics screen
-      },
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 18),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.primaryTeal, AppColors.primaryGreen],
-          ),
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primaryTeal.withOpacity(0.4),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.bar_chart_rounded, color: Colors.white, size: 22),
-            SizedBox(width: 10),
-            Text(
-              'View Prayer Statistics',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(width: 8),
-            Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Floating app bar that appears on scroll
-  Widget _buildFloatingAppBar(BuildContext context) {
-    final opacity = (_scrollOffset / 100).clamp(0.0, 1.0);
-    
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: const Color(0xFF0F2027).withOpacity(opacity),
-          boxShadow: opacity > 0.5
-              ? [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10)]
-              : null,
-        ),
-        child: SafeArea(
-          bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm,
-            ),
-            child: Row(
-              children: [
-                const SizedBox(width: 4),
-                
-                // Title
-                const Text(
-                  'Prayer Times',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                
-                const Spacer(),
-                
-                // Location chip
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withOpacity(0.2)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.location_on_rounded,
-                        size: 14,
-                        color: Colors.white.withOpacity(0.9),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Dhaka',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white.withOpacity(0.9),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                const SizedBox(width: 8),
-                
-                // Hijri date chip
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryGold.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppColors.primaryGold.withOpacity(0.3)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.calendar_month_rounded,
-                        size: 12,
-                        color: AppColors.primaryGold.withOpacity(0.9),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '17 Rajab',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white.withOpacity(0.9),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                const SizedBox(width: 10),
-                
-                // Settings button
-                GestureDetector(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    // TODO: Navigate to settings
-                  },
-                  child: Container(
-                    width: 38,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white.withOpacity(0.15)),
-                    ),
-                    child: Icon(
-                      Icons.settings_rounded,
-                      color: Colors.white.withOpacity(0.9),
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),

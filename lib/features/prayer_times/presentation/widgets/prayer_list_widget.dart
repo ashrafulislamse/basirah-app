@@ -2,388 +2,271 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../app/theme/app_colors.dart';
-import '../../../../app/theme/app_spacing.dart';
 
 /// Prayer List Widget - Today's Prayers
 /// 
-/// Clean design with:
-/// - Clear visual hierarchy
-/// - Swipe to mark as prayed
-/// - Color-coded status
-/// - Jummah indicator on Fridays
-/// - Sunrise distinction
+/// Clean list design with:
+/// - Colored icon badges
+/// - Prayer name + time
+/// - Status badges (Done, Now, countdown)
 class PrayerListWidget extends StatelessWidget {
   final List<Map<String, dynamic>> prayers;
-  final int currentPrayerIndex;
   final Map<String, bool> prayedStatus;
-  final Map<String, bool> onTimeStatus;
+  final int currentPrayerIndex;
   final Function(String) onMarkAsPrayed;
   final bool isJummah;
 
   const PrayerListWidget({
     super.key,
     required this.prayers,
-    required this.currentPrayerIndex,
     required this.prayedStatus,
-    required this.onTimeStatus,
+    required this.currentPrayerIndex,
     required this.onMarkAsPrayed,
     this.isJummah = false,
   });
 
-  String _getMonthName(int month) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months[month - 1];
-  }
-
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = isDark ? const Color(0xFF1F2937) : Colors.white;
+    final textColor = isDark ? Colors.white : const Color(0xFF1F2937);
+    final subTextColor = isDark ? Colors.white70 : const Color(0xFF6B7280);
+    
+    // Get current date
     final now = DateTime.now();
-    final dayName = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][now.weekday - 1];
+    final dateStr = '${now.day} ${_getMonthName(now.month)}';
     
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // Header
-          _buildHeader(context, dayName, now),
-          const SizedBox(height: 20),
-          
-          // Prayer list
-          ...prayers.asMap().entries.map((entry) {
-            final index = entry.key;
-            final prayer = entry.value;
-            final isCurrent = index == currentPrayerIndex;
-            final isPrayed = prayedStatus[prayer['key']] ?? false;
-            final isOnTime = onTimeStatus[prayer['key']] ?? false;
-            final isSunrise = prayer['key'] == 'sunrise';
-            final isJummahPrayer = isJummah && prayer['key'] == 'dhuhr';
-            
-            return Column(
-              children: [
-                if (index > 0)
-                  Divider(
-                    height: 1,
-                    color: Theme.of(context).dividerColor.withOpacity(0.1),
-                  ),
-                _PrayerListItem(
-                  prayer: prayer,
-                  isCurrent: isCurrent,
-                  isPrayed: isPrayed,
-                  isOnTime: isOnTime,
-                  isSunrise: isSunrise,
-                  isJummah: isJummahPrayer,
-                  onTap: () {
-                    if (!isSunrise && !isPrayed) {
-                      onMarkAsPrayed(prayer['key'] as String);
-                    }
-                  },
-                ),
-              ],
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, String dayName, DateTime now) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: AppColors.primaryTeal.withOpacity(0.12),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Icon(Icons.wb_sunny_rounded, color: AppColors.primaryTeal, size: 22),
-        ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Today's Prayers",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                '$dayName, ${now.day} ${_getMonthName(now.month)}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.5),
-                ),
-              ),
-            ],
-          ),
-        ),
-        // Hijri date badge
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: AppColors.primaryGold.withOpacity(0.12),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.calendar_month_rounded, size: 14, color: AppColors.primaryGold),
-              const SizedBox(width: 6),
-              Text(
-                '17 Rajab',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primaryGold,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _PrayerListItem extends StatelessWidget {
-  final Map<String, dynamic> prayer;
-  final bool isCurrent;
-  final bool isPrayed;
-  final bool isOnTime;
-  final bool isSunrise;
-  final bool isJummah;
-  final VoidCallback onTap;
-
-  const _PrayerListItem({
-    required this.prayer,
-    required this.isCurrent,
-    required this.isPrayed,
-    required this.isOnTime,
-    required this.isSunrise,
-    required this.isJummah,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color = prayer['color'] as Color;
-    final textColor = Theme.of(context).textTheme.bodyLarge!.color!;
-    
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
-        decoration: BoxDecoration(
-          color: isCurrent ? color.withOpacity(0.08) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            // Prayer icon
-            _buildIcon(color),
-            const SizedBox(width: 14),
-            
-            // Prayer name
-            Expanded(child: _buildName(context, textColor)),
-            
-            // Time
-            Text(
-              prayer['time'] as String,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: isSunrise
-                    ? textColor.withOpacity(0.4)
-                    : isCurrent
-                        ? color
-                        : textColor,
-              ),
-            ),
-            const SizedBox(width: 14),
-            
-            // Status badge
-            _buildStatus(context, color, textColor),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIcon(Color color) {
-    return Container(
-      width: 42,
-      height: 42,
-      decoration: BoxDecoration(
-        gradient: isSunrise
-            ? null
-            : LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  color.withOpacity(isPrayed ? 0.15 : 0.2),
-                  color.withOpacity(isPrayed ? 0.08 : 0.1),
-                ],
-              ),
-        color: isSunrise ? AppColors.warning.withOpacity(0.1) : null,
-        borderRadius: BorderRadius.circular(12),
-        border: isCurrent ? Border.all(color: color, width: 2) : null,
-      ),
-      child: Icon(
-        prayer['icon'] as IconData,
-        color: isSunrise
-            ? AppColors.warning.withOpacity(0.7)
-            : isPrayed
-                ? color.withOpacity(0.6)
-                : color,
-        size: 20,
-      ),
-    );
-  }
-
-  Widget _buildName(BuildContext context, Color textColor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              isJummah ? 'Jummah' : prayer['name'] as String,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: isCurrent ? FontWeight.bold : FontWeight.w600,
-                color: isSunrise ? textColor.withOpacity(0.4) : null,
-              ),
-            ),
-            if (isJummah) ...[
-              const SizedBox(width: 6),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryGreen.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(6),
+        // Section header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Row(
+            children: [
+              Text(
+                "Today's Prayers",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
                 ),
-                child: const Icon(Icons.mosque_rounded, size: 12, color: AppColors.primaryGreen),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  dateStr,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: subTextColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ],
-          ],
-        ),
-        if (isSunrise)
-          Text(
-            'Not a prayer',
-            style: TextStyle(
-              fontSize: 10,
-              color: textColor.withOpacity(0.3),
-            ),
           ),
+        ),
+        
+        const SizedBox(height: 16),
+        
+        // Prayer list
+        ...prayers.asMap().entries.map((entry) {
+          final index = entry.key;
+          final prayer = entry.value;
+          final key = prayer['key'] as String;
+          final isPrayed = prayedStatus[key] ?? false;
+          final isCurrent = index == currentPrayerIndex;
+          final isSunrise = key == 'sunrise';
+          
+          return _buildPrayerRow(
+            context,
+            prayer: prayer,
+            isPrayed: isPrayed,
+            isCurrent: isCurrent,
+            isSunrise: isSunrise,
+            isJummahDhuhr: isJummah && key == 'dhuhr',
+            cardColor: cardColor,
+            textColor: textColor,
+            subTextColor: subTextColor,
+            isDark: isDark,
+          );
+        }),
       ],
     );
   }
 
-  Widget _buildStatus(BuildContext context, Color color, Color textColor) {
+  Widget _buildPrayerRow(
+    BuildContext context, {
+    required Map<String, dynamic> prayer,
+    required bool isPrayed,
+    required bool isCurrent,
+    required bool isSunrise,
+    required bool isJummahDhuhr,
+    required Color cardColor,
+    required Color textColor,
+    required Color subTextColor,
+    required bool isDark,
+  }) {
+    final name = isJummahDhuhr ? 'Jummah' : prayer['name'] as String;
+    final time = prayer['time'] as String;
+    final iconColor = prayer['color'] as Color? ?? AppColors.primaryTeal;
+    final icon = prayer['icon'] as IconData? ?? Icons.access_time;
+    
+    // Current prayer has coral/pink background
+    final rowBgColor = isCurrent 
+        ? (isDark ? const Color(0xFF3D2424) : const Color(0xFFFEF2F2))
+        : cardColor;
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: rowBgColor,
+        borderRadius: BorderRadius.circular(16),
+        border: isCurrent 
+            ? Border.all(color: const Color(0xFFFCA5A5).withOpacity(0.3), width: 1)
+            : null,
+      ),
+      child: Row(
+        children: [
+          // Icon badge
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: iconColor.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: iconColor, size: 22),
+          ),
+          
+          const SizedBox(width: 14),
+          
+          // Prayer name + time
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: isCurrent ? const Color(0xFFEF4444) : textColor,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                time,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: isCurrent ? const Color(0xFFF87171) : subTextColor,
+                ),
+              ),
+            ],
+          ),
+          
+          const Spacer(),
+          
+          // Status badge
+          _buildStatusBadge(
+            isPrayed: isPrayed,
+            isCurrent: isCurrent,
+            isSunrise: isSunrise,
+            isDark: isDark,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge({
+    required bool isPrayed,
+    required bool isCurrent,
+    required bool isSunrise,
+    required bool isDark,
+  }) {
     if (isSunrise) {
-      return SizedBox(
-        width: 80,
-        child: Center(
-          child: Text('—', style: TextStyle(color: textColor.withOpacity(0.3))),
+      // Not a prayer
+      return Text(
+        'NOT A PRAYER',
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          color: isDark ? Colors.white38 : Colors.grey[400],
+          letterSpacing: 0.5,
         ),
       );
     }
-
+    
     if (isPrayed) {
+      // Done badge
       return Container(
-        width: 80,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.success, AppColors.success.withOpacity(0.8)],
-          ),
-          borderRadius: BorderRadius.circular(10),
+          color: AppColors.success,
+          borderRadius: BorderRadius.circular(20),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_rounded, size: 14, color: Colors.white),
-            const SizedBox(width: 4),
-            Column(
-              children: [
-                const Text(
-                  'Done',
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                if (isOnTime)
-                  const Text(
-                    'On Time',
-                    style: TextStyle(fontSize: 8, color: Colors.white70),
-                  ),
-              ],
+            Icon(Icons.check, color: Colors.white, size: 14),
+            SizedBox(width: 4),
+            Text(
+              'Done',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
             ),
           ],
         ),
       );
     }
-
+    
     if (isCurrent) {
+      // Now badge (coral/pink)
       return Container(
-        width: 80,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withOpacity(0.5)),
+          color: const Color(0xFFF87171),
+          borderRadius: BorderRadius.circular(20),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: color.withOpacity(0.5),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 6),
+            Icon(Icons.circle, color: Colors.white, size: 8),
+            SizedBox(width: 6),
             Text(
               'Now',
               style: TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: color,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
               ),
             ),
           ],
         ),
       );
     }
-
-    // Upcoming
-    return SizedBox(
-      width: 80,
-      child: Text(
-        'in 2h 7m',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 11,
-          color: textColor.withOpacity(0.5),
-        ),
+    
+    // Future prayer - show countdown
+    return Text(
+      'in 2h 7m', // TODO: Calculate actual countdown
+      style: TextStyle(
+        fontSize: 12,
+        color: isDark ? Colors.white54 : Colors.grey[500],
       ),
     );
+  }
+
+  String _getMonthName(int month) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return months[month - 1];
   }
 }
